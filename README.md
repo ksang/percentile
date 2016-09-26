@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/ksang/percentile.svg?branch=master)](https://travis-ci.org/ksang/percentile)
 #percentile
 A command line tool to fetch x% percentile sample value from prometheus time series query
 
