@@ -2,9 +2,11 @@ package promdata
 
 import (
 	"encoding/json"
+	"fmt"
 	"reflect"
 	"sort"
 	"strconv"
+	"strings"
 )
 
 // SeriesDataSet is the full json format prometheus series returns
@@ -13,7 +15,7 @@ type SeriesDataSet struct {
 	Data   struct {
 		ResultType string `json:"resultType"`
 		Result     []struct {
-			Metric struct{}        `json:"metric"`
+			Metric interface{}     `json:"metric"`
 			Values [][]interface{} `json:"values"`
 		} `json:"result"`
 	} `json:"data"`
@@ -66,9 +68,11 @@ func ParseJsonData(data []byte) (*SeriesDataSet, error) {
 }
 
 // extract data SeriesDataSet and generate sorted slice for value pairs
-func ExtractSeriesValues(sds *SeriesDataSet) []SeriesValue {
-	var res []SeriesValue
+func ExtractSeriesValues(sds *SeriesDataSet) map[string][]SeriesValue {
+	res := make(map[string][]SeriesValue)
 	for _, result := range sds.Data.Result {
+		var svs []SeriesValue
+		metricName := ParseMetricToString(result.Metric)
 		for _, record := range result.Values {
 			// valid record should be [timestamp, value]
 			if len(record) == 2 {
@@ -76,10 +80,40 @@ func ExtractSeriesValues(sds *SeriesDataSet) []SeriesValue {
 					TimeStamp: record[0].(float64),
 					Value:     record[1],
 				}
-				res = append(res, sv)
+				svs = append(svs, sv)
 			}
 		}
+		sort.Sort(ByValue(svs))
+		res[metricName] = svs
 	}
-	sort.Sort(ByValue(res))
+
+	return res
+}
+
+// a helper function to parse json then extract SeriesValue map
+func ExtractSVM(data []byte) (map[string][]SeriesValue, error) {
+	sds, err := ParseJsonData(data)
+	if err != nil {
+		return nil, err
+	}
+	return ExtractSeriesValues(sds), nil
+}
+
+// parse a uknown metric struct to string
+func ParseMetricToString(metric interface{}) string {
+	var res string
+	if name, ok := metric.(map[string]interface{})["__name__"]; ok {
+		res += fmt.Sprintf("%s", name)
+	}
+	res += "{"
+	for k, v := range metric.(map[string]interface{}) {
+		if k == "__name__" {
+			continue
+		}
+		//res = res + k + "="
+		res = res + fmt.Sprintf("%s", v) + ","
+	}
+	res = strings.TrimSuffix(res, ",")
+	res += "}"
 	return res
 }

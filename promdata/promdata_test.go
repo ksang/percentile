@@ -31,9 +31,52 @@ func TestParseJsonData(t *testing.T) {
 	}
 	t.Logf("%#v", sds)
 
-	sv := ExtractSeriesValues(sds)
-	for _, s := range sv {
-		t.Logf("%#v\n", s)
+	svm := ExtractSeriesValues(sds)
+	for k, s := range svm {
+		t.Logf("Metric: %s\n", k)
+		for _, it := range s {
+			t.Logf("%#v\n", it)
+		}
+	}
+}
+
+func TestParseMetricToString(t *testing.T) {
+	var tests = []struct {
+		input    map[string]interface{}
+		expected string
+	}{
+		{
+			input: map[string]interface{}{
+				"__name__": "node_cpu",
+				"node":     "node1",
+				"cpu":      "cpu1",
+			},
+			expected: `node_cpu{node1,cpu1}`,
+		},
+		{
+			input: map[string]interface{}{
+				"node": "node1",
+				"cpu":  "cpu1",
+			},
+			expected: `{node1,cpu1}`,
+		},
+		{
+			input: map[string]interface{}{
+				"__name__": "node_cpu",
+			},
+			expected: `node_cpu{}`,
+		},
+		{
+			input:    map[string]interface{}{},
+			expected: `{}`,
+		},
 	}
 
+	for caseid, test := range tests {
+		res := ParseMetricToString(test.input)
+		t.Logf("ParseMetricToString(): %s", res)
+		if len(res) != len(test.expected) {
+			t.Errorf("Case #%d, Actual: %s, Expected: %s", caseid+1, res, test.expected)
+		}
+	}
 }
