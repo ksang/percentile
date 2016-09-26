@@ -4,5 +4,6 @@ go:
   - 1.6.2
 
 script:
-  - build.sh
+  - chmod +x build.sh
+  - ./build.sh
   - go test ./...
