@@ -1,3 +1,8 @@
+/*
+Pacage promdata parsing and extracing metadata/data from prometheus HTTP API.
+It will sort the data value in groups for easy fetching percentile/max/min/avg
+sample value.
+*/
 package promdata
 
 import (

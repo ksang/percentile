@@ -1,6 +1,7 @@
-// Package gcd privides method to check if enough sample size for percentile
-// is provided, implementing Euclidean algorithm
-
+/*
+Package gcd privides method to check if enough sample size for percentile
+is provided, implementing Euclidean algorithm
+*/
 package gcd
 
 // GCD takes two uint64 and returns their greatest common divisor as uint64
