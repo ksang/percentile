@@ -1,6 +1,10 @@
 #percentile
 A command line tool to fetch x% percentile sample value from prometheus time series query
 
+###Build:
+
+	./build.sh
+
 ###Usage:
 
 	  -duration string
@@ -21,14 +25,14 @@ A command line tool to fetch x% percentile sample value from prometheus time ser
 	  -v	verbose output
 
 
-
 ###Example:
 
-	percentile -p 95 -prom http://127.0.0.1:9090 \
+	./build/percentile -p 95 -prom http://127.0.0.1:9090 \
 		-query "sum(rate(node_network_receive_bytes[2m]))by(node)" \
 		-start 2016-09-26T00:00:00+08:00 -duration 10h -step 5m -t
 
 ###Output:
+
 	+-------------+-------------+-------------+-------------+----------+
 	|     95%     |     MAX     |     MIN     |     AVG     |  LABELS  |
 	+-------------+-------------+-------------+-------------+----------+
