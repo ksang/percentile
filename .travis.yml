@@ -3,7 +3,6 @@ language: go
 go:
   - 1.6.2
 
-go_import_path: vendor
 script:
   - build.sh
   - go test ./...
