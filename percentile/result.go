@@ -14,6 +14,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 )
 
+// Result represents a percentile result for a label set
 type Result struct {
 	Labels     string
 	Enough     bool

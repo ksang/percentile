@@ -1,5 +1,5 @@
 /*
-Package Promdata parsing and extracing metadata/data from prometheus HTTP API.
+Package promdata parsing and extracing metadata/data from prometheus HTTP API.
 It will sort the data value in groups for easy fetching percentile/max/min/avg
 sample value.
 */
@@ -105,7 +105,7 @@ func ExtractSVM(data []byte) (map[string][]SeriesValue, error) {
 	return ExtractSeriesValues(sds), nil
 }
 
-// parse a uknown metric struct to string
+// ParseMetricToString parse a unknown metric struct to string
 func ParseMetricToString(metric interface{}) string {
 	var res string
 	if name, ok := metric.(map[string]interface{})["__name__"]; ok {
