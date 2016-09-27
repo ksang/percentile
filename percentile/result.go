@@ -23,6 +23,7 @@ type Result struct {
 	Average    float64
 }
 
+// GenResult is the portal of running command arguments
 func GenResult(arg *percentile.Arg) {
 	data, err := GetSeriesOutput(arg)
 	if err != nil {
@@ -84,25 +85,26 @@ func genResult(svs []promdata.SeriesValue, labels string, table bool, p int) *Re
 	var err error
 	res.Percentile, err = strconv.ParseFloat(svs[idx].Value.(string), 64)
 	if err != nil {
-		fmt.Errorf("Failed to get Percentile: %s", err)
+		fmt.Printf("ERROR: Failed to get Percentile: %s", err)
 		return res
 	}
 	if table {
 		res.Max, err = strconv.ParseFloat(svs[len(svs)-1].Value.(string), 64)
 		if err != nil {
-			fmt.Errorf("Failed to get Max: %s", err)
+			fmt.Printf("ERROR: Failed to get Max: %s", err)
 			return res
 		}
 		res.Min, err = strconv.ParseFloat(svs[0].Value.(string), 64)
 		if err != nil {
-			fmt.Errorf("Failed to get Min: %s", err)
+
+			fmt.Printf("ERROR: Failed to get Min: %s", err)
 			return res
 		}
 		var sum float64
 		for _, v := range svs {
 			u, err := strconv.ParseFloat(v.Value.(string), 64)
 			if err != nil {
-				fmt.Errorf("Failed to calc average: %s", err)
+				fmt.Printf("ERROR: Failed to calc average: %s", err)
 				return res
 			}
 			sum += u
@@ -116,6 +118,7 @@ func checkEnough(count int, p int) bool {
 	return true
 }
 
+// GetSeriesOutput get rawdata from prometheus http api or file
 func GetSeriesOutput(arg *percentile.Arg) ([]byte, error) {
 	if len(arg.PromURL) == 0 {
 		f, err := os.Open(arg.FilePath)

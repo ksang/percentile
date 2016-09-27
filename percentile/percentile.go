@@ -37,14 +37,15 @@ func init() {
 func main() {
 	flag.Parse()
 	arg := &percentile.Arg{}
-	if err := GetArg(arg); err != nil {
+	if err := getArg(arg); err != nil {
 		fmt.Println("ERROR: failed to parse arguments:", err)
 		return
 	}
 	GenResult(arg)
 }
 
-func GetArg(arg *percentile.Arg) error {
+// GetArg parse and check command line arguments
+func getArg(arg *percentile.Arg) error {
 	if percent < 0 || percent > 100 {
 		return errors.New("percent value is not valid")
 	}
@@ -63,14 +64,14 @@ func GetArg(arg *percentile.Arg) error {
 	arg.Percent = percent
 
 	if len(full) == 0 {
-		if err := GenFullURI(arg); err != nil {
+		if err := genFullURI(arg); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-func GenFullURI(arg *percentile.Arg) error {
+func genFullURI(arg *percentile.Arg) error {
 	res := strings.TrimSuffix(promhost, "/") + "/api/v1/query_range?query="
 	res += url.QueryEscape(query)
 	se, err := ParseStartEnd(starttime, duration)

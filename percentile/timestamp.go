@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+// ParseStartEnd parse the start and duration arg string into
+// prometheus API formated start/end argument
 func ParseStartEnd(start string, duration string) (string, error) {
 	s, err := time.Parse(time.RFC3339, start)
 	if err != nil {

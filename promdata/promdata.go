@@ -1,5 +1,5 @@
 /*
-Pacage promdata parsing and extracing metadata/data from prometheus HTTP API.
+Package Promdata parsing and extracing metadata/data from prometheus HTTP API.
 It will sort the data value in groups for easy fetching percentile/max/min/avg
 sample value.
 */
@@ -34,6 +34,7 @@ type SeriesValue struct {
 	Value     interface{}
 }
 
+// ByValue defines sort methods of SeriesValue
 type ByValue []SeriesValue
 
 func (s ByValue) Len() int      { return len(s) }
@@ -63,7 +64,7 @@ func (s ByValue) Less(i, j int) bool {
 	return v1 < v2
 }
 
-// Parse raw series data result to SeriesDataSet
+// ParseJsonData parse raw series data result to SeriesDataSet
 func ParseJsonData(data []byte) (*SeriesDataSet, error) {
 	var sds SeriesDataSet
 	if err := json.Unmarshal(data, &sds); err != nil {
@@ -72,7 +73,7 @@ func ParseJsonData(data []byte) (*SeriesDataSet, error) {
 	return &sds, nil
 }
 
-// extract data SeriesDataSet and generate sorted slice for value pairs
+// ExtractSeriesValues extracts data SeriesDataSet and generate sorted slice for value pairs
 func ExtractSeriesValues(sds *SeriesDataSet) map[string][]SeriesValue {
 	res := make(map[string][]SeriesValue)
 	for _, result := range sds.Data.Result {
@@ -95,7 +96,7 @@ func ExtractSeriesValues(sds *SeriesDataSet) map[string][]SeriesValue {
 	return res
 }
 
-// a helper function to parse json then extract SeriesValue map
+// ExtractSVM is a helper function to parse json then extract SeriesValue map
 func ExtractSVM(data []byte) (map[string][]SeriesValue, error) {
 	sds, err := ParseJsonData(data)
 	if err != nil {
