@@ -13,13 +13,13 @@ A command line tool to fetch x% percentile sample value from prometheus time ser
 	  -f string
 	    	full URI to prometheus series api or result file output
 	  -p int
-	    	percentile to get, a int number in range 0-100 (default -1)
+	    	percentile to get, an int number in range 0-100 (default -1)
 	  -prom string
 	    	promethues host url, e.g http://127.0.0.1:9090
 	  -query string
-	    	query used for query_range, without time series
+	    	query used for query_range, without time stamps
 	  -start string
-	    	start timestamp, in RFC3339 or unix timestamp
+	    	start timestamp, in RFC3339 format or unix timestamp
 	  -step string
 	    	step, e.g 10s, 15s, 1m (default "30s")
 	  -t	print table result, including max/avg/min

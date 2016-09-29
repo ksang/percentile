@@ -80,37 +80,18 @@ func genResult(svs []promdata.SeriesValue, labels string, table bool, p int) *Re
 	if len(svs) == 0 {
 		return res
 	}
-
-	idx := int((len(svs) - 1) * p / 100)
-	//fmt.Printf("Len: %d, Idx: %d\n", len(svs), idx)
-	var err error
-	res.Percentile, err = strconv.ParseFloat(svs[idx].Value.(string), 64)
-	if err != nil {
-		fmt.Printf("ERROR: Failed to get Percentile: %s", err)
-		return res
-	}
+	res.Percentile = calcPercentile(svs, p)
 	if table {
+		var err error
 		res.Max, err = strconv.ParseFloat(svs[len(svs)-1].Value.(string), 64)
 		if err != nil {
 			fmt.Printf("ERROR: Failed to get Max: %s", err)
-			return res
 		}
 		res.Min, err = strconv.ParseFloat(svs[0].Value.(string), 64)
 		if err != nil {
-
 			fmt.Printf("ERROR: Failed to get Min: %s", err)
-			return res
 		}
-		var sum float64
-		for _, v := range svs {
-			u, err := strconv.ParseFloat(v.Value.(string), 64)
-			if err != nil {
-				fmt.Printf("ERROR: Failed to calc average: %s", err)
-				return res
-			}
-			sum += u
-		}
-		res.Average = sum / float64(len(svs))
+		res.Average = calcAverage(svs)
 	}
 	return res
 }
