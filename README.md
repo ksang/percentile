@@ -1,12 +1,14 @@
 [![Build Status](https://travis-ci.org/ksang/percentile.svg?branch=master)](https://travis-ci.org/ksang/percentile) [![Go Report Card](https://goreportcard.com/badge/github.com/ksang/percentile)](https://goreportcard.com/report/github.com/ksang/percentile)
-#percentile
+
+# percentile
+
 A command line tool to fetch x% percentile sample value from prometheus time series query
 
-###Build:
+### Build:
 
 	./build.sh
 
-###Usage:
+### Usage:
 
 	  -duration string
 	    	duration, e.g 2s, 3m, 4h.
@@ -26,13 +28,13 @@ A command line tool to fetch x% percentile sample value from prometheus time ser
 	  -v	verbose output
 
 
-###Example:
+### Example:
 
 	./build/percentile -p 95 -prom http://127.0.0.1:9090 \
 		-query "sum(rate(node_network_receive_bytes[2m]))by(node)" \
 		-start 2016-09-26T00:00:00+08:00 -duration 10h -step 5m -t
 
-###Output:
+### Output:
 
 	+-------------+-------------+-------------+-------------+----------+
 	|     95%     |     MAX     |     MIN     |     AVG     |  LABELS  |
